@@ -1,0 +1,21 @@
+flowchart TD
+    A([Abrir la aplicación]) --> B[Pantalla de login<br/>SignInSide]
+    B --> C{{Tooltip ℹ️: muestra<br/>correo y contraseña de prueba}}
+    B --> D[Usuario escribe correo y contraseña]
+    D --> E[Al salir de un campo:<br/>validación individual - blur]
+    D --> F[Clic en 'Iniciar sesión']
+    F --> G[validateLoginForm<br/>authValidators.js]
+    G --> H{¿Datos válidos?}
+    H -- No --> I[Muestra mensaje de error<br/>bajo cada campo]
+    I --> D
+    H -- Sí --> J[useAuth.login<br/>estado: loading]
+    J --> K[Pantalla de carga<br/>CircularProgress]
+    K --> L[authService.authenticate<br/>compara con users.json<br/>retraso simulado 1.5 s]
+    L --> M{¿Credenciales<br/>correctas?}
+    M -- No --> N[estado: login<br/>Alerta: Correo o contraseña incorrectos]
+    N --> D
+    M -- Sí --> O[estado: welcome<br/>WelcomeScreen]
+    O --> P[Texto centrado: ¡Bienvenido!]
+    P --> Q[Botón 'Salir']
+    Q --> R[useAuth.logout<br/>estado: login]
+    R --> B
