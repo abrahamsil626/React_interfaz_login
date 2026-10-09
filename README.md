@@ -1,91 +1,73 @@
-﻿# Interfaz de Login (React + MUI)
+# Interfaz de Login
 
-Interfaz de inicio de sesión basada en la plantilla *Sign-in side* de Material UI, portada a las versiones actuales de React y MUI. Autentica contra un JSON local, muestra una pantalla de carga y una de bienvenida con opción de salir.
+Interfaz de **inicio de sesión** en React con CSS propio, con una estética serena inspirada en el pen *Calm breeze login screen*: franja de degradado verde sobre fondo negro, campos translúcidos centrados, cuadrados que flotan al fondo y un título que se desliza al entrar.
 
-> Es un proyecto de demostración: no tiene backend ni base de datos.
+> **Prueba el proyecto en vivo:** [reactinterfazlogin.netlify.app](https://reactinterfazlogin.netlify.app/)
+
+## Cómo se hizo
+
+1. **Diseño de referencia.** La parte visual parte del pen [*Calm breeze login screen*](https://codepen.io/Lewitje/pen/BNNJjo) de Lewitje, adaptado a React: fondo negro en lugar de blanco, textos en español y la animación de entrada hecha con el estado de React en vez de jQuery.
+2. **Especificación.** El login tiene requisitos y criterios de aceptación en [`specs/login/`](specs/login/) (Spec-Driven Development): `spec.md`, `plan.md` y `tasks.md`.
+3. **Implementación** en React siguiendo esa spec, con pruebas automáticas por cada criterio de aceptación (CA-xx).
+4. **Flujo documentado** en un diagrama Mermaid: [`docs/flujo-login.mmd`](docs/flujo-login.mmd).
+
+> El pen original solo tiene dos campos y un botón; validaciones, mensajes de error, datos de prueba, carga y salida se diseñaron aparte en el mismo estilo.
+
+## Funcionalidad
+
+- Interfaz íntegramente **en español**.
+- Formulario de login con validación de correo (obligatorio y con formato válido) y contraseña (obligatoria, mínimo 8 caracteres), al salir de cada campo y al enviar.
+- Datos de prueba (`demo@correo.com` / `Demo1234`) visibles en un tooltip y enlace **Usar datos de prueba** que rellena el formulario.
+- Botón para mostrar u ocultar la contraseña.
+- El foco va al primer campo con error y los errores se limpian al corregir.
+- Al enviar, el formulario se desvanece y aparece un indicador de carga mientras se verifican las credenciales (~1.5 s); si no coinciden, vuelve con la alerta animada "Correo o contraseña incorrectos".
+- Bienvenida con el nombre del usuario: el título se desliza al centro de la franja y aparece el botón **Salir**, que regresa al login.
+- Diseño adaptable (responsive) y animaciones decorativas desactivadas si el sistema pide reducir el movimiento.
+
+> La autenticación es **simulada** en el cliente (JSON local en `src/data/users.json`, sesión solo en memoria); no hay backend ni base de datos.
 
 ## Stack
-- React 19 + Vite (JavaScript)
-- MUI (`@mui/material`, `@mui/icons-material`) con Emotion
-- Vitest + React Testing Library (pruebas)
 
-## Requisitos
-- Node.js 20 o superior y npm
+React 19 · Vite · CSS propio (sin librería de componentes) · Vitest + Testing Library.
 
-## Instalación y uso
+## Empezar
+
 ```bash
 npm install
-npm run dev        # servidor de desarrollo (http://localhost:5173)
-npm test           # ejecuta las pruebas una vez
-npm run test:watch # pruebas en modo observador
-npm run build      # build de producción en dist/
-npm run preview    # sirve el build
+npm run dev        # http://localhost:5173
 ```
 
-## Datos de prueba
-| Campo | Valor |
-|-------|-------|
-| Correo | `demo@correo.com` |
-| Contraseña | `Demo1234` |
+| Script | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción en `dist/` |
+| `npm run preview` | Sirve localmente el build |
+| `npm test` | Pruebas (criterios de aceptación de la spec) |
+| `npm run test:watch` | Pruebas en modo observador |
 
-También aparecen en el tooltip (ícono ℹ️) de la parte superior del formulario. Los datos viven en `src/data/users.json`.
-
-## Flujo
-Ver el diagrama en [`docs/flujo-login.mmd`](docs/flujo-login.mmd) (Mermaid).
-
-1. Se muestra el formulario de login.
-2. Se validan correo y contraseña (al salir de cada campo y al enviar).
-3. Si son válidos, se muestra la pantalla de carga mientras se verifican las credenciales (~1.5 s simulados).
-4. Si no coinciden con el JSON, vuelve al formulario con la alerta "Correo o contraseña incorrectos".
-5. Si coinciden, se muestra la pantalla de bienvenida con el botón **Salir**, que regresa al login.
-
-## Experiencia de usuario
-- Imagen de fondo de una ciudad (ilustración SVG propia en `src/assets/login-bg.svg`, sin dependencias externas ni problemas de licencia).
-- Botón para mostrar/ocultar la contraseña.
-- Enlace **Usar datos de prueba** que rellena el formulario.
-- El foco va al primer campo con error; los errores se limpian al corregir.
-- Alerta animada para credenciales incorrectas y transición suave a la bienvenida.
-- Diseño adaptable: en móvil se oculta la imagen y el formulario ocupa toda la pantalla.
-
-## Reglas de validación
-Definidas en `src/validators/authValidators.js`, separadas de la interfaz.
-
-| Campo | Regla | Mensaje |
-|-------|-------|---------|
-| Correo | Obligatorio | El correo es obligatorio |
-| Correo | Formato válido | Ingresa un correo válido |
-| Contraseña | Obligatoria | La contraseña es obligatoria |
-| Contraseña | Mínimo 8 caracteres | La contraseña debe tener al menos 8 caracteres |
-
-El formulario usa `noValidate`, así que no interviene la validación nativa del navegador.
+> Requiere Node.js 20 o superior.
 
 ## Estructura
+
 ```
-specs/login/            spec.md, plan.md, tasks.md (Spec-Driven Development)
-docs/flujo-login.mmd    diagrama del flujo
+specs/        Especificación, plan y tareas (spec-driven)
+docs/         Diagrama del flujo de login (Mermaid)
 src/
-  data/users.json       usuarios de prueba
-  validators/           validaciones (funciones puras) y sus pruebas
-  services/             authService: autenticación simulada
-  hooks/useAuth.js      estado de sesión: login | loading | welcome
-  pages/                SignInSide, LoadingScreen, WelcomeScreen
-  components/           Copyright
-  assets/login-bg.svg   imagen lateral
-  theme.js, App.jsx, main.jsx, App.test.jsx
+  components/ Bubbles (cuadrados del fondo), Copyright, Icons
+  data/       Usuarios de prueba (users.json)
+  hooks/      useAuth: estado de sesión (login · loading · welcome)
+  pages/      SignIn, LoadingScreen, WelcomeScreen
+  services/   authService: autenticación simulada
+  validators/ Validaciones (funciones puras) y sus pruebas
+  test/       Configuración de pruebas
+  styles.css  Estilos de toda la interfaz
 ```
 
-## Decisiones de diseño
-- **Sin router:** solo hay tres vistas; un estado en `useAuth` basta.
-- **Sesión en memoria:** al recargar la página se vuelve al login.
-- **`authService` reemplazable:** para usar una API real basta con cambiar `authenticate`; la interfaz no se toca.
-- **Imagen local:** la plantilla original usaba `source.unsplash.com`, servicio ya dado de baja. Se reemplazó por una ilustración propia.
+## Sistema de diseño
 
-## Desarrollo guiado por especificación (SDD)
-La especificación en `specs/login/` es la fuente de verdad. Cada criterio de aceptación (CA-xx) tiene al menos una prueba. Ante un cambio de comportamiento, se actualiza primero `spec.md`, luego `plan.md`/`tasks.md` y después el código.
+Todo el estilo vive en [`src/styles.css`](src/styles.css), con los colores como variables CSS:
 
-## Limitaciones de seguridad
-Las credenciales en texto plano dentro del frontend solo sirven para pruebas. En producción la autenticación debe hacerla un backend, con contraseñas con hash y sesiones/tokens.
-
-## Próximos pasos posibles
-Backend real, persistencia de sesión, rutas protegidas, recuperación de contraseña y registro.
-
+- **Color:** franja con degradado de `#50a3a2` a `#53e3a6` sobre fondo negro; texto blanco, y verde oscuro (`#2e8b7f`) sobre las superficies blancas.
+- **Forma:** campos y botones de 250 px centrados, con esquinas de 3 px; los campos son translúcidos y al recibir el foco se ensanchan y pasan a blanco.
+- **Movimiento:** diez cuadrados translúcidos suben girando en bucle; el formulario se desvanece y el título se desliza al iniciar sesión.
+- **Tipografía:** Source Sans Pro en pesos finos (200 y 300), cargada desde Google Fonts.

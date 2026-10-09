@@ -86,7 +86,7 @@ describe('Flujo de login', () => {
     render(<App />);
     await fillAndSubmit(user, 'otro@correo.com', 'Clave12345');
     expect(await screen.findByText('Correo o contraseña incorrectos', {}, { timeout: 4000 })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /bienvenido/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /salir/i })).not.toBeInTheDocument();
   });
 
   it('CA-10/CA-11: login correcto → carga → bienvenida → salir', async () => {
@@ -96,10 +96,16 @@ describe('Flujo de login', () => {
 
     expect(await screen.findByRole('status')).toBeInTheDocument();
     expect(
-      await screen.findByRole('heading', { name: /bienvenido/i }, { timeout: LOGIN_DELAY_MS + 2000 }),
+      await screen.findByRole(
+        'heading',
+        { name: '¡Bienvenido, Usuario Demo!' },
+        { timeout: LOGIN_DELAY_MS + 2000 },
+      ),
     ).toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /salir/i }));
+    expect(screen.getByRole('heading', { name: 'Bienvenido' })).toBeInTheDocument();
     await waitFor(() => expect(screen.getByLabelText(/correo electrónico/i)).toHaveValue(''));
   });
 });

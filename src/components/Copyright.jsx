@@ -1,9 +1,3 @@
-import { Typography } from '@mui/material';
-
-export default function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {`Copyright © Mi Aplicación ${new Date().getFullYear()}.`}
-    </Typography>
-  );
+export default function Copyright() {
+  return <p className="copyright">{`Copyright © Mi Aplicación ${new Date().getFullYear()}.`}</p>;
 }

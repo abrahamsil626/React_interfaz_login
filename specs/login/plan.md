@@ -2,7 +2,7 @@
 
 ## Stack
 - Vite + React (JavaScript, sin TypeScript)
-- MUI (`@mui/material`, `@mui/icons-material`, `@emotion/react`, `@emotion/styled`)
+- CSS propio (`src/styles.css`), sin librería de componentes
 - Vitest + React Testing Library + jsdom
 
 ## Decisiones
@@ -13,7 +13,11 @@
 | `authService` lee `users.json` y simula latencia con `setTimeout` | Reemplazable por una API real sin tocar la UI. |
 | El tooltip lee el usuario de prueba de `users.json` | Una sola fuente del dato (RF-02). |
 | Formulario con `noValidate` | Evita validación nativa HTML; manda el módulo de validadores. |
-| Imagen lateral local (`src/assets/login-bg.svg`) | `source.unsplash.com` fue dado de baja. |
+| Diseño del pen *Calm breeze login screen* en CSS propio, sin MUI | El diseño son una franja, dos campos y un botón; una librería de componentes sobra (RF-08). |
+| Animaciones con clases CSS según el estado de `useAuth`, sin jQuery | El pen usaba jQuery para desvanecer el formulario y bajar el título; el estado de React ya lo sabe. |
+| El formulario sigue montado (oculto e `inert`) durante la carga y la bienvenida | La franja conserva su alto y el título puede deslizarse sin saltos; al salir se remonta con una `key` nueva para vaciarlo (CA-11). |
+| Etiquetas solo para lectores de pantalla + `placeholder` visible | Respeta el aspecto del pen sin perder accesibilidad. |
+| Texto verde más oscuro (`#2e8b7f`) sobre blanco | El `#53e3a6` del pen apenas se lee sobre blanco. |
 
 ## Estructura
 ```
@@ -24,9 +28,9 @@ src/
   validators/authValidators.js
   services/authService.js
   hooks/useAuth.js
-  pages/SignInSide.jsx, LoadingScreen.jsx, WelcomeScreen.jsx
-  components/Copyright.jsx
-  theme.js, App.jsx, main.jsx
+  pages/SignIn.jsx, LoadingScreen.jsx, WelcomeScreen.jsx
+  components/Bubbles.jsx, Copyright.jsx, Icons.jsx
+  styles.css, App.jsx, main.jsx
   test/setup.js
 ```
 
